@@ -1,3 +1,5 @@
+require_relative 'bj_exception'
+
 class SetOfCards
   def
     initialize(init_deck = [])
@@ -11,6 +13,10 @@ class SetOfCards
   end
 
   protected
+
+  def wipe
+    @cards = []
+  end
 
   attr_reader :cards
 end

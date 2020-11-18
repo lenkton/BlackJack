@@ -4,21 +4,21 @@ require_relative 'bj_exception'
 require_relative 'game_state'
 
 class Game
-  def initialize(player_name = 'New Player')
+  def initialize(player, dealer)
     @deck = Deck.new
     @deck.shuffle!
-    @player = Player.new(player_name, [@deck.take_card!, @deck.take_card!])
-    @dealer = Player.new('the dealer', [@deck.take_card!, @deck.take_card!])
+    (@player = player).wipe_hand
+    (@dealer = dealer).wipe_hand
     @is_final = false
   end
 
   def state
     if @is_final
-      GameState.new(@dealer.hand, @player.hand)
+      GameState.new(@dealer.hand, @player.hand, true)
     else
       dk = []
       @dealer.hand.size.times { dk << Card.new('*') }
-      GameState.new(dk, @player.hand)
+      GameState.new(dk, @player.hand, false)
     end
   end
 

@@ -1,11 +1,12 @@
 class GameState
-  attr_reader :dealer_cards, :player_cards, :player_score, :dealer_score
+  attr_reader :dealer_cards, :player_cards, :player_score, :dealer_score, :has_ended
 
-  def initialize(dealer_cards, player_cards)
+  def initialize(dealer_cards, player_cards, has_ended = false)
     @dealer_cards = dealer_cards
     @player_cards = player_cards
     @player_score = assess(@player_cards)
     @dealer_score = assess(@dealer_cards)
+    @has_ended = has_ended
   end
 
   DEFAULT_TJQK_VALUE = 10
