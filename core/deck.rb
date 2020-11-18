@@ -1,5 +1,5 @@
 class Deck < SetOfCards
-  def get_card
+  def top_card!
     @cards.pop
   end
 
