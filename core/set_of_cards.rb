@@ -1,4 +1,4 @@
-class SetOfCardsdef
+class SetOfCards
   def
     initialize(init_deck = [])
     raise BJException, 'init_deck must be an array' unless init_deck.is_a?(Array)
