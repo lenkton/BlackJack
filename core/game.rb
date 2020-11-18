@@ -22,7 +22,6 @@ class GameState
   def assess(cards)
     aces = 0
     total = cards.inject(0) do |res, card|
-      puts res.inspect, card.inspect
       case card.name
       when '*' then '???'
       when /[K,T,Q,J]/ then res + DEFAULT_TJQK_VALUE
@@ -53,7 +52,7 @@ class Game
 
   def state
     if @is_final
-      GameState.new(@dealer.cards, @player.cards)
+      GameState.new(@dealer.hand, @player.hand)
     else
       dk = []
       @dealer.hand.size.times { dk << Card.new('*') }
@@ -83,8 +82,12 @@ class Game
 
   private
 
+  def internal_state
+    GameState.new(@dealer.hand, @player.hand)
+  end
+
   def dealer_turn
-    if state.dealer_score < 17 && @dealer.hand.size < 3
+    if internal_state.dealer_score < 17 && @dealer.hand.size < 3
       @dealer.add_card(@deck.take_card!)
     end
 
