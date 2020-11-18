@@ -1,5 +1,6 @@
 class Game
   def initialize(player_name = 'New Player')
-    @players = [Player(player_name), Player('the dealer')]
+    @players = [Player.new(player_name), Player.new('the dealer')]
+    @deck = Deck.new
   end
 end
