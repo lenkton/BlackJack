@@ -9,4 +9,8 @@ class SetOfCards
   protected
 
   attr_reader :cards
+
+  def add_card(card)
+    @cards << card
+  end
 end
