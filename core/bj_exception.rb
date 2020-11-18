@@ -1,0 +1,1 @@
+class BJException < RuntimeError; end

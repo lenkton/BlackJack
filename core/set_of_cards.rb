@@ -13,5 +13,4 @@ class SetOfCards
   protected
 
   attr_reader :cards
-
 end
