@@ -22,18 +22,19 @@ class GameState
   def assess(cards)
     aces = 0
     total = cards.inject(0) do |res, card|
+      puts res.inspect, card.inspect
       case card.name
       when '*' then '???'
       when /[K,T,Q,J]/ then res + DEFAULT_TJQK_VALUE
       when /A/
         aces += 1
         res + ACE_MAX
-      when /[2..9]/ then res + card.name.to_i
+      when /[2-9]/ then res + card.name.to_i
       else raise BJException, 'Incorrect Card name'
       end
     end
 
-    total > WIN_POINTS ? true_aces_value(total, aces) : total
+    total.is_a?(Integer) && total > WIN_POINTS ? true_aces_value(total, aces) : total
   end
 
   def true_aces_value(total, aces)
@@ -55,8 +56,8 @@ class Game
       GameState.new(@dealer.cards, @player.cards)
     else
       dk = []
-      @dealer.cards.size.times { dk << Card.new('*') }
-      GameState.new(dk, @player.cards)
+      @dealer.hand.size.times { dk << Card.new('*') }
+      GameState.new(dk, @player.hand)
     end
   end
 
