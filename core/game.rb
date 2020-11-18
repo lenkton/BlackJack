@@ -29,7 +29,7 @@ class GameState
         aces += 1
         res + ACE_MAX
       when /[2..9]/ then res + card.name.to_i
-      else raise 'Incorrect Card name'
+      else raise BJException, 'Incorrect Card name'
       end
     end
 
@@ -59,4 +59,41 @@ class Game
       GameState.new(dk, @player.cards)
     end
   end
+
+  def pass
+    raise BJException, 'Game has ended' if @is_final
+
+    dealer_turn
+  end
+
+  def take
+    raise BJException, 'Game has ended' if @is_final
+
+    raise BJException, 'The hand is already full' if @player.hand.size == 3
+
+    @player.add_card(@deck.take_card!)
+
+    dealer_turn
+  end
+
+  def show_up
+    @is_final = true
+  end
+
+  private
+
+  def dealer_turn
+    if state.dealer_score < 17 && @dealer.hand.size < 3
+      @dealer.add_card(@deck.take_card!)
+    end
+
+    check_final!
+  end
+
+  def check_final!
+    @is_final ||=
+      @player.hand.size == 3 && @dealer.hand.size == 3
+  end
 end
+
+class BJException < RuntimeError; end

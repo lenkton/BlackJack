@@ -6,11 +6,12 @@ class SetOfCards
     @cards = init_deck
   end
 
+  def add_card(card)
+    @cards << card
+  end
+
   protected
 
   attr_reader :cards
 
-  def add_card(card)
-    @cards << card
-  end
 end
