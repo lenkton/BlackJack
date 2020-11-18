@@ -64,6 +64,7 @@ class Game
     raise BJException, 'Game has ended' if @is_final
 
     dealer_turn
+    state
   end
 
   def take
@@ -74,10 +75,14 @@ class Game
     @player.add_card(@deck.take_card!)
 
     dealer_turn
+    state
   end
 
   def show_up
+    raise BJException, 'Game has ended' if @is_final
+
     @is_final = true
+    state
   end
 
   private
