@@ -4,12 +4,19 @@ require_relative 'bj_exception'
 require_relative 'game_state'
 
 class Game
-  def initialize(player, dealer)
+  def initialize(player, dealer, bet = 10)
     @deck = Deck.new
     @deck.shuffle!
     (@player = player).wipe_hand
     (@dealer = dealer).wipe_hand
     @is_final = false
+    @bank = player.take_money(bet)
+    begin
+      @bank = dealer.take_money(bet)
+    rescue NoMoneyException => e
+      player.give_money(@bank)
+      raise e
+    end
   end
 
   def state
@@ -43,11 +50,17 @@ class Game
   def show_up
     raise BJException, 'Game has ended' if @is_final
 
-    @is_final = true
+    end_game
     state
   end
 
   private
+
+  def end_game
+    @is_final = true
+
+    state.winner.give_money(@bank)
+  end
 
   def internal_state
     GameState.new(@dealer.hand, @player.hand)
@@ -60,7 +73,6 @@ class Game
   end
 
   def check_final!
-    @is_final ||=
-      @player.hand.size == 3 && @dealer.hand.size == 3
+    end_game if !@is_final && @player.hand.size == 3 && @dealer.hand.size == 3
   end
 end
