@@ -7,12 +7,18 @@ class Game
   def initialize(player, dealer, bet = 10)
     @deck = Deck.new
     @deck.shuffle!
-    (@player = player).wipe_hand
-    (@dealer = dealer).wipe_hand
+
+    [[:@dealer, dealer], [:@player, player]].each do |inst_var_sym, person|
+      person.wipe_hand
+      2.times { person.add_card(@deck.take_card!) }
+
+      instance_variable_set(inst_var_sym, person)
+    end
+
     @is_final = false
     @bank = player.take_money(bet)
     begin
-      @bank = dealer.take_money(bet)
+      @bank += dealer.take_money(bet)
     rescue NoMoneyException => e
       player.give_money(@bank)
       raise e
@@ -21,7 +27,7 @@ class Game
 
   def state
     if @is_final
-      GameState.new(@dealer.hand, @player.hand, true)
+      internal_state
     else
       dk = []
       @dealer.hand.size.times { dk << Card.new('*') }
@@ -59,11 +65,16 @@ class Game
   def end_game
     @is_final = true
 
-    state.winner.give_money(@bank)
+    if (winner = state.winner) == :nowinner
+      @player.give_money(@bank / 2)
+      @dealer.give_money(@bank / 2)
+    else
+      winner.give_money(@bank)
+    end
   end
 
   def internal_state
-    GameState.new(@dealer.hand, @player.hand)
+    GameState.new(@dealer.hand, @player.hand, @is_final, @player, @dealer)
   end
 
   def dealer_turn
