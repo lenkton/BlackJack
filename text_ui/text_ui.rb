@@ -4,8 +4,7 @@ require './core/bj_exception'
 class TUIException < BJException; end
 
 class TextUI
-
-  COMMANDS = Session.instance_methods - Object.instance_methods - [:player, :dealer] # rewrite
+  COMMANDS = Session.instance_methods - Object.instance_methods - %i[player dealer] # rewrite
 
   def run
     puts "Enter the player's name"
@@ -54,7 +53,7 @@ class TextUI
 
     if state.has_ended
       puts "The winner is #{state.winner.name}"
-      [:player, :dealer].each do |person|
+      %i[player dealer].each do |person|
         puts "#{@session.send(person).name}'s money: #{@session.send(person).money}"
       end
     end
