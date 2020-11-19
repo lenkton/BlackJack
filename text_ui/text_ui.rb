@@ -56,6 +56,7 @@ class TextUI
       %i[player dealer].each do |person|
         puts "#{@session.send(person).name}'s money: #{@session.send(person).money}"
       end
+      puts "To play again type 'replay', to quit - type 'quit'"
     end
   end
 
