@@ -12,6 +12,7 @@ class Session
 
   def replay
     @game = Game.new(@player, @dealer) if state.has_ended
+    @game.state
   end
 
   (Game.instance_methods - Session.instance_methods).each do |meth|
