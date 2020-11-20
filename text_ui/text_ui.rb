@@ -6,6 +6,7 @@ class TUIException < BJException; end
 
 class TextUI
   COMMANDS = Game.instance_methods + Session.instance_methods - Object.instance_methods - %i[player dealer]
+  DECORATE_LENGTH = 20
 
   def run
     puts "Enter the player's name"
@@ -54,9 +55,11 @@ class TextUI
   end
 
   def print_state
+    puts '-' * DECORATE_LENGTH
     print_hand(@session.player)
     unless @session.game.is_over
       print_hidden_hand(@session.dealer)
+      puts '-' * DECORATE_LENGTH
       return
     end
 
@@ -65,26 +68,36 @@ class TextUI
     %i[player dealer].each do |person|
       puts "#{@session.send(person).name}'s money: #{@session.send(person).money}"
     end
+    puts '-' * DECORATE_LENGTH
     puts "To play again type 'replay', to quit - type 'quit'"
+    puts '-' * DECORATE_LENGTH
   end
 
   def print_winner
-    return puts 'No winner this time' if @session.game.winner == :nowinner
-
-    puts "The winner is #{@session.game.winner.name}"
+    puts '*' * DECORATE_LENGTH
+    if @session.game.winner == :nowinner
+      puts 'No winner this time'
+    else
+      puts "The winner is #{@session.game.winner.name}"
+    end
+    puts '*' * DECORATE_LENGTH
   end
 
   def print_hand(person)
+    puts '-' * DECORATE_LENGTH
     puts "#{person.name}'s hand:"
     person.hand.cards.each { |card| print card.name }
     puts
     puts "Total score: #{person.hand.value}"
+    puts '-' * DECORATE_LENGTH
   end
 
   def print_hidden_hand(person)
+    puts '-' * DECORATE_LENGTH
     puts "#{person.name}'s hand:"
     person.hand.cards.each { print '?' }
     puts
     puts 'Total score: ???'
+    puts '-' * DECORATE_LENGTH
   end
 end
