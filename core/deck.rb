@@ -5,8 +5,8 @@ class Deck < SetOfCards
   def initialize
     cards = []
     super(cards)
-    '♥♦♣♠'.each_char do |suit|
-      'A23456789TJQK'.each_char do |rank| # T == 10, like in pro poker :D
+    Card::SUITS.each do |suit|
+      Card::RANKS.each do |rank| # T == 10, like in pro poker :D
         cards << Card.new(rank + suit)
       end
     end
