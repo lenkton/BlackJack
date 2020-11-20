@@ -3,6 +3,8 @@ require_relative 'deck'
 require_relative 'bj_exception'
 
 class Game
+  attr_reader :is_over
+
   def initialize(player, dealer, bet = 10)
     @deck = Deck.new
     @deck.shuffle!
@@ -23,11 +25,11 @@ class Game
   end
 
   def form_bank(bet)
-    @bank = player.take_money(bet)
+    @bank = @player.take_money(bet)
     begin
-      @bank += dealer.take_money(bet)
+      @bank += @dealer.take_money(bet)
     rescue NoMoneyException => e
-      player.give_money(@bank)
+      @player.give_money(@bank)
       raise e
     end
   end

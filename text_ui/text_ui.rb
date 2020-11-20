@@ -26,10 +26,10 @@ class TextUI
 
   def handle_command
     print '>'
-    next if (command = gets.chomp) == ''
+    return if (command = gets.chomp) == ''
 
     command = command.gsub(' ', '_').to_sym
-    next if tui_commands_handle(command)
+    return if tui_commands_handle(command)
 
     raise TUIException, "The command #{command} does not exist" unless COMMANDS.include?(command)
 
