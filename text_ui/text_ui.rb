@@ -51,9 +51,13 @@ class TextUI
 
   def print_state
     print_hand(@session.player)
-    print_hand(@session.dealer)
 
-    return unless @session.game.is_over
+    unless @session.game.is_over
+      print_hidden_hand(@session.dealer)
+      return
+    end
+
+    print_hand(@session.dealer)
 
     print_winner
 
@@ -74,5 +78,12 @@ class TextUI
     person.hand.cards.each { |card| print card.name }
     puts
     puts "Total score: #{person.hand.value}"
+  end
+
+  def print_hidden_hand(person)
+    puts "#{person.name}'s hand:"
+    person.hand.cards.each { print '?' }
+    puts
+    puts "Total score: ???"
   end
 end
