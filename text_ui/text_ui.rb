@@ -43,6 +43,7 @@ class TextUI
     case command
     when :quit then @running = false
     when :help then puts HELP
+    when :state then print_state
     else return false
     end
     true
