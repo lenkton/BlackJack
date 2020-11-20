@@ -55,7 +55,7 @@ class Game
 
     raise BJException, 'The hand is already full' if @player.hand.size == 3
 
-    @player.add_card(@deck.take_card!)
+    @player.hand.add_card(@deck.take_card!)
 
     dealer_turn
     state
@@ -86,7 +86,7 @@ class Game
   end
 
   def dealer_turn
-    @dealer.add_card(@deck.take_card!) if internal_state.dealer_score < 17 && @dealer.hand.size < 3
+    @dealer.hand.add_card(@deck.take_card!) if internal_state.dealer_score < 17 && @dealer.hand.size < 3
 
     check_final!
   end
