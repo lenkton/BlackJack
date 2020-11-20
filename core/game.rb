@@ -68,12 +68,22 @@ class Game
     state
   end
 
+  def winner
+    raise BJException, 'The game is not over yet' unless @has_ended
+
+    return :nowinner if player_score == dealer_score || player_score > WIN_POINTS && dealer_score > WIN_POINTS
+    return @dealer if player_score > WIN_POINTS
+    return @player if dealer_score > WIN_POINTS
+
+    player_score > dealer_score ? @player : @dealer
+  end
+
   private
 
   def end_game
     @is_final = true
 
-    if (winner = state.winner) == :nowinner
+    if (winner = self.winner) == :nowinner
       @player.give_money(@bank / 2)
       @dealer.give_money(@bank / 2)
     else

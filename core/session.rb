@@ -1,7 +1,7 @@
 require_relative 'game'
 
 class Session
-  attr_reader :player, :dealer
+  attr_reader :player, :dealer, :game
 
   def initialize(name = 'New Player')
     @player = Player.new(name, [], 100)
