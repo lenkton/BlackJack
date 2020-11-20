@@ -8,7 +8,7 @@ class Hand < SetOfCards
     aces = 0
     total = cards.inject(0) do |res, card|
       case card.name
-      when /[K,T,Q,J]/ then res + Game::DEFAULT_TJQK_VALUE
+      when /[KTQJ]/ then res + Game::DEFAULT_TJQK_VALUE
       when /A/
         aces += 1
         res + Game::ACE_MAX
@@ -17,12 +17,12 @@ class Hand < SetOfCards
       end
     end
 
-    total > Game::WIN_POINTS ? true_aces_value(total, aces) : total
+    total > Game::WIN_POINTS ? total - extra_aces_value(total, aces) : total
   end
 
   private
 
-  def true_aces_value(total, aces)
+  def extra_aces_value(total, aces)
     [((total - Game::WIN_POINTS + Game::ACE_DIF - 1) / Game::ACE_DIF), aces].min * Game::ACE_DIF
   end
 end
