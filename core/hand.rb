@@ -1,6 +1,8 @@
 require_relative 'set_of_cards'
 
 class Hand < SetOfCards
+  attr_reader :cards
+
   DEFAULT_TJQK_VALUE = 10
   WIN_POINTS = 21
   ACE_MAX = 11

@@ -4,7 +4,7 @@ require './core/bj_exception'
 class TUIException < BJException; end
 
 class TextUI
-  COMMANDS = Session.instance_methods - Object.instance_methods - %i[player dealer] # rewrite
+  COMMANDS = Game.instance_methods + Session.instance_methods - Object.instance_methods - %i[player dealer]
 
   def run
     puts "Enter the player's name"
@@ -12,7 +12,7 @@ class TextUI
     @session = (name == '' ? Session.new : Session.new(name))
     @running = true
 
-    print_state(@session.state)
+    print_state
 
     while @running
       begin
@@ -33,12 +33,13 @@ class TextUI
 
     raise TUIException, "The command #{command} does not exist" unless COMMANDS.include?(command)
 
-    state = @session.send(command)
+    @session.game.send(command)
 
-    print_state(state)
+    print_state
   end
 
-  def tui_commands_handle(command) # takes symbol
+  # takes symbol
+  def tui_commands_handle(command)
     case command
     when :quit then @running = false
     when :help then puts HELP
@@ -47,23 +48,30 @@ class TextUI
     true
   end
 
-  def print_state(state)
-    print_hand(state, :player)
-    print_hand(state, :dealer)
+  def print_state
+    print_hand(@session.player)
+    print_hand(@session.dealer)
 
-    if state.has_ended
-      puts "The winner is #{state.winner.name}"
-      %i[player dealer].each do |person|
-        puts "#{@session.send(person).name}'s money: #{@session.send(person).money}"
-      end
-      puts "To play again type 'replay', to quit - type 'quit'"
+    return unless @session.game.is_over
+
+    print_winner
+
+    %i[player dealer].each do |person|
+      puts "#{@session.send(person).name}'s money: #{@session.send(person).money}"
     end
+    puts "To play again type 'replay', to quit - type 'quit'"
   end
 
-  def print_hand(state, sym)
-    puts "#{sym}'s hand:"
-    state.send("#{sym}_cards").each { |card| print card.name }
+  def print_winner
+    return puts 'No winner this time' if @session.game.winner == :nowinner
+
+    puts "The winner is #{@session.game.winner.name}"
+  end
+
+  def print_hand(person)
+    puts "#{person.name}'s hand:"
+    person.hand.cards.each { |card| print card.name }
     puts
-    puts "Total score: #{state.send("#{sym}_score")}"
+    puts "Total score: #{person.hand.value}"
   end
 end
