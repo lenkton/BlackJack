@@ -12,10 +12,4 @@ class Session
   def replay
     @game = Game.new(@player, @dealer) if @game.is_over
   end
-
-  (Game.instance_methods - Session.instance_methods).each do |meth|
-    define_method(meth) do # possible bugs with the methods which take arguments
-      @game.send meth
-    end
-  end
 end
