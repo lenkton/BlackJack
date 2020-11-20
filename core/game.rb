@@ -7,15 +7,23 @@ class Game
   def initialize(player, dealer, bet = 10)
     @deck = Deck.new
     @deck.shuffle!
+    @player = player
+    @dealer = dealer
 
-    [[:@dealer, dealer], [:@player, player]].each do |inst_var_sym, person|
-      person.wipe_hand
-      2.times { person.add_card(@deck.take_card!) }
-
-      instance_variable_set(inst_var_sym, person)
-    end
+    give_start_cards
 
     @is_final = false
+    form_bank(bet)
+  end
+
+  def give_start_cards
+    [@player, @dealer].each do |person|
+      person.hand.wipe
+      2.times { person.hand.add_card(@deck.take_card!) }
+    end
+  end
+
+  def form_bank(bet)
     @bank = player.take_money(bet)
     begin
       @bank += dealer.take_money(bet)

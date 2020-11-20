@@ -12,11 +12,11 @@ class SetOfCards
     @cards << card
   end
 
-  protected
-
   def wipe
     @cards = []
   end
+
+  protected
 
   attr_reader :cards
 end

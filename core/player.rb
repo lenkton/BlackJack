@@ -13,10 +13,6 @@ class Player
     @hand = Hand.new(init_cards)
   end
 
-  def wipe_hand
-    @hand.wipe
-  end
-
   def take_money(bet)
     raise NoMoneyException, "Player #{@name} has not enough money" if @money < bet
 
