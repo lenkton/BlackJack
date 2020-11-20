@@ -1,5 +1,6 @@
 require './core/session'
 require './core/bj_exception'
+require_relative 'help'
 
 class TUIException < BJException; end
 
@@ -84,6 +85,6 @@ class TextUI
     puts "#{person.name}'s hand:"
     person.hand.cards.each { print '?' }
     puts
-    puts "Total score: ???"
+    puts 'Total score: ???'
   end
 end

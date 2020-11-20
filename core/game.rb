@@ -5,6 +5,12 @@ require_relative 'bj_exception'
 class Game
   attr_reader :is_over
 
+  DEFAULT_TJQK_VALUE = 10
+  WIN_POINTS = 21
+  ACE_MAX = 11
+  ACE_MIN = 1
+  ACE_DIF = ACE_MAX - ACE_MIN
+
   def initialize(player, dealer, bet = 10)
     @deck = Deck.new
     @deck.shuffle!
@@ -57,7 +63,7 @@ class Game
   end
 
   def winner
-    raise BJException, 'The game is not over yet' unless @has_ended
+    raise BJException, 'The game is not over yet' unless @is_over
 
     player_score = @player.hand.value
     dealer_score = @dealer.hand.value
