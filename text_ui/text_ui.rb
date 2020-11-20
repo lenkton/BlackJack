@@ -45,6 +45,9 @@ class TextUI
     when :quit then @running = false
     when :help then puts HELP
     when :state then print_state
+    when :replay
+      @session.replay
+      print_state
     else return false
     end
     true
@@ -52,16 +55,13 @@ class TextUI
 
   def print_state
     print_hand(@session.player)
-
     unless @session.game.is_over
       print_hidden_hand(@session.dealer)
       return
     end
 
     print_hand(@session.dealer)
-
     print_winner
-
     %i[player dealer].each do |person|
       puts "#{@session.send(person).name}'s money: #{@session.send(person).money}"
     end
