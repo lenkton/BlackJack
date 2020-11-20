@@ -1,19 +1,20 @@
 require_relative 'set_of_cards'
 require_relative 'bj_exception'
+require_relative 'hand'
 
 class NoMoneyException < BJException; end
 
-class Player < SetOfCards
-  attr_reader :name, :money
+class Player
+  attr_reader :name, :money, :hand
 
   def initialize(name = 'New Player', init_cards = [], money = 100)
     @name = name
     @money = money
-    super(init_cards)
+    @hand = Hand.new(init_cards)
   end
 
   def wipe_hand
-    wipe
+    @hand.wipe
   end
 
   def take_money(bet)
@@ -25,9 +26,5 @@ class Player < SetOfCards
 
   def give_money(money)
     @money += money
-  end
-
-  def hand
-    cards
   end
 end
