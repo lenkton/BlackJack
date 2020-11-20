@@ -7,12 +7,10 @@ class Session
     @player = Player.new(name, [], 100)
     @dealer = Player.new('dealer', [], 100)
     @game = Game.new(@player, @dealer)
-    # @game_state = @game.state
   end
 
   def replay
-    @game = Game.new(@player, @dealer) if state.has_ended
-    @game.state
+    @game = Game.new(@player, @dealer) if @game.is_over
   end
 
   (Game.instance_methods - Session.instance_methods).each do |meth|

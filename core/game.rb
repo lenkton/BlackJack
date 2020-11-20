@@ -1,7 +1,6 @@
 require_relative 'player'
 require_relative 'deck'
 require_relative 'bj_exception'
-require_relative 'game_state'
 
 class Game
   def initialize(player, dealer, bet = 10)
@@ -12,7 +11,7 @@ class Game
 
     give_start_cards
 
-    @is_final = false
+    @is_over = false
     form_bank(bet)
   end
 
@@ -33,45 +32,35 @@ class Game
     end
   end
 
-  def state
-    if @is_final
-      internal_state
-    else
-      dk = []
-      @dealer.hand.size.times { dk << Card.new('*') }
-      GameState.new(dk, @player.hand, false)
-    end
-  end
-
   def pass
-    raise BJException, 'Game has ended' if @is_final
+    raise BJException, 'Game has ended' if @is_over
 
     dealer_turn
-    state
   end
 
   def take
-    raise BJException, 'Game has ended' if @is_final
+    raise BJException, 'Game has ended' if @is_over
 
     raise BJException, 'The hand is already full' if @player.hand.size == 3
 
     @player.hand.add_card(@deck.take_card!)
 
     dealer_turn
-    state
   end
 
   def show_up
-    raise BJException, 'Game has ended' if @is_final
+    raise BJException, 'Game has ended' if @is_over
 
     end_game
-    state
   end
 
   def winner
     raise BJException, 'The game is not over yet' unless @has_ended
 
-    return :nowinner if player_score == dealer_score || player_score > WIN_POINTS && dealer_score > WIN_POINTS
+    player_score = @player.hand.value
+    dealer_score = @dealer.hand.value
+
+    return :nowinner if player_score == dealer_score || [player_score, dealer_score].min > WIN_POINTS
     return @dealer if player_score > WIN_POINTS
     return @player if dealer_score > WIN_POINTS
 
@@ -81,7 +70,7 @@ class Game
   private
 
   def end_game
-    @is_final = true
+    @is_over = true
 
     if (winner = self.winner) == :nowinner
       @player.give_money(@bank / 2)
@@ -91,17 +80,13 @@ class Game
     end
   end
 
-  def internal_state
-    GameState.new(@dealer.hand, @player.hand, @is_final, @player, @dealer)
-  end
-
   def dealer_turn
-    @dealer.hand.add_card(@deck.take_card!) if internal_state.dealer_score < 17 && @dealer.hand.size < 3
+    @dealer.hand.add_card(@deck.take_card!) if @dealer.hand.value < 17 && @dealer.hand.size < 3
 
     check_final!
   end
 
   def check_final!
-    end_game if !@is_final && @player.hand.size == 3 && @dealer.hand.size == 3
+    end_game if !@is_over && @player.hand.size == 3 && @dealer.hand.size == 3
   end
 end
