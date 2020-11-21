@@ -5,7 +5,7 @@ require_relative 'help'
 class TUIException < BJException; end
 
 class TextUI
-  COMMANDS = Game.instance_methods + Session.instance_methods - Object.instance_methods - %i[player dealer]
+  COMMANDS = Game.instance_methods + Object.instance_methods - [:is_over]
   DECORATE_LENGTH = 20
 
   def run

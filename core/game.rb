@@ -23,23 +23,6 @@ class Game
     form_bank(bet)
   end
 
-  def give_start_cards
-    [@player, @dealer].each do |person|
-      person.hand.wipe
-      2.times { person.hand.add_card(@deck.take_card!) }
-    end
-  end
-
-  def form_bank(bet)
-    @bank = @player.take_money(bet)
-    begin
-      @bank += @dealer.take_money(bet)
-    rescue NoMoneyException => e
-      @player.give_money(@bank)
-      raise e
-    end
-  end
-
   def pass
     raise BJException, 'Game has ended' if @is_over
 
@@ -76,6 +59,23 @@ class Game
   end
 
   private
+
+  def give_start_cards
+    [@player, @dealer].each do |person|
+      person.hand.wipe
+      2.times { person.hand.add_card(@deck.take_card!) }
+    end
+  end
+
+  def form_bank(bet)
+    @bank = @player.take_money(bet)
+    begin
+      @bank += @dealer.take_money(bet)
+    rescue NoMoneyException => e
+      @player.give_money(@bank)
+      raise e
+    end
+  end
 
   def end_game
     @is_over = true
